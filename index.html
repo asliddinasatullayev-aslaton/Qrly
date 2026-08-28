@@ -1,246 +1,352 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muslimbek QR Code Generator</title>
+    <title>QRly — Generate QR code with url</title>
+    <meta name="description" content="Next-generation QR code engineering studio. Instant live generation, CTA badge framing, custom palettes, logo embedding, vector SVG &amp; high-res export.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="keywords" content="QR, QR code, QR code generator, Free QR code genertor">
+    <meta name="description" content="Turn any url into QR code without sign in or wasting time">
+    <meta name="author" content="Asliddin Asatullayev">
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>QR Code Generator</h1>
-            <p class="subtitle">Muslimbek tomonidan yaratilgan</p>
-        </header>
 
-        <div class="main-content">
-            <div class="input-section">
-                <div class="card">
-                    <h2>Ma'lumot Kiriting</h2>
-                    <div class="form-group">
-                        <label for="qr-input">Link yoki Matn</label>
-                        <textarea id="qr-input" placeholder="https://example.com yoki matn kiriting..."></textarea>
-                    </div>
-                    <button id="generate-btn" class="btn primary">QR Kod Yaratish</button>
+    <div class="codex-background">
+        <div class="codex-grid-layer"></div>
+        <div class="ambient-glow glow-top"></div>
+        <div class="ambient-glow glow-bottom"></div>
+    </div>
+
+    <br>
+    <header class="studio-nav">
+        <div class="nav-inner">
+            <div class="brand-cluster">
+                <div class="brand-badge-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="brand-svg">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                        <circle cx="6.5" cy="6.5" r="1.5" fill="currentColor"/>
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+                        <circle cx="6.5" cy="17.5" r="1.5" fill="currentColor"/>
+                        <circle cx="17.5" cy="17.5" r="1.5" fill="#10B981"/>
+                    </svg>
                 </div>
-
-                <div class="card customization-panel" id="customization-panel" style="display: none;">
-                    <h2>Dizayn Sozlamalari</h2>
-                    
-                    <div class="tabs">
-                        <button class="tab-btn active" data-tab="colors">Ranglar</button>
-                        <button class="tab-btn" data-tab="logo">Logo/Rasm</button>
-                        <button class="tab-btn" data-tab="shape">Shakl</button>
-                        <button class="tab-btn" data-tab="advanced">Qo'shimcha</button>
-                    </div>
-
-                    <div class="tab-content active" id="colors-tab">
-                        <div class="form-group">
-                            <label>QR Kod Rangi</label>
-                            <div class="color-inputs">
-                                <input type="color" id="fg-color" value="#000000">
-                                <input type="text" id="fg-color-text" value="#000000">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Fon Rangi</label>
-                            <div class="color-inputs">
-                                <input type="color" id="bg-color" value="#ffffff">
-                                <input type="text" id="bg-color-text" value="#ffffff">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Gradient</label>
-                            <label class="toggle">
-                                <input type="checkbox" id="enable-gradient">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="form-group gradient-options" id="gradient-options" style="display: none;">
-                            <label>Boshlang'ich Rang</label>
-                            <div class="color-inputs">
-                                <input type="color" id="gradient-start" value="#667eea">
-                                <input type="text" id="gradient-start-text" value="#667eea">
-                            </div>
-                            <label>Tugash Rangi</label>
-                            <div class="color-inputs">
-                                <input type="color" id="gradient-end" value="#764ba2">
-                                <input type="text" id="gradient-end-text" value="#764ba2">
-                            </div>
-                            <label>Gradient Yo'nalishi</label>
-                            <select id="gradient-direction">
-                                <option value="horizontal">Gorizontal</option>
-                                <option value="vertical">Vertikal</option>
-                                <option value="diagonal">Diagonal</option>
-                                <option value="radial">Radial</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="tab-content" id="logo-tab">
-                        <div class="form-group">
-                            <label>QR Kod Ichiga Rasm/Logo Qo'shish</label>
-                            <div class="logo-upload">
-                                <input type="file" id="logo-upload" accept="image/*" hidden>
-                                <button id="logo-btn" class="btn secondary">Rasm Tanlash</button>
-                                <span id="logo-name">Fayl tanlanmagan</span>
-                            </div>
-                            <div class="logo-preview" id="logo-preview" style="display: none;">
-                                <img id="logo-img" src="" alt="Logo preview">
-                                <button id="remove-logo" class="btn danger small">O'chirish</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Logo O'lchami (%)</label>
-                            <input type="range" id="logo-size" min="10" max="30" value="20">
-                            <span id="logo-size-value">20%</span>
-                        </div>
-                        <div class="form-group">
-                            <label>Logo Chegarasi</label>
-                            <label class="toggle">
-                                <input type="checkbox" id="logo-border" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="form-group logo-border-options" id="logo-border-options">
-                            <label>Chegara Rangi</label>
-                            <div class="color-inputs">
-                                <input type="color" id="logo-border-color" value="#ffffff">
-                                <input type="text" id="logo-border-color-text" value="#ffffff">
-                            </div>
-                            <label>Chegara Qalini</label>
-                            <input type="range" id="logo-border-width" min="0" max="10" value="4">
-                            <span id="logo-border-width-value">4px</span>
-                        </div>
-                    </div>
-
-                    <div class="tab-content" id="shape-tab">
-                        <div class="form-group">
-                            <label>Modul Shakli</label>
-                            <div class="shape-options">
-                                <button class="shape-btn active" data-shape="square" title="Kvadrat">
-                                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/></svg>
-                                </button>
-                                <button class="shape-btn" data-shape="dots" title="Nuqta">
-                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></svg>
-                                </button>
-                                <button class="shape-btn" data-shape="rounded" title="Yumaloq Burchak">
-                                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
-                                </button>
-                                <button class="shape-btn" data-shape="circle" title="Dumaloq">
-                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>
-                                </button>
-                                <button class="shape-btn" data-shape="diamond" title="Almazo">
-                                    <svg viewBox="0 0 24 24"><polygon points="12,2 22,12 12,22 2,12"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Gozalak Shakli (Finder Pattern)</label>
-                            <div class="shape-options">
-                                <button class="shape-btn active" data-eye="square" title="Kvadrat">
-                                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10"/></svg>
-                                </button>
-                                <button class="shape-btn" data-eye="rounded" title="Yumaloq">
-                                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
-                                </button>
-                                <button class="shape-btn" data-eye="circle" title="Dumaloq">
-                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg>
-                                </button>
-                                <button class="shape-btn" data-eye="dot" title="Nuqta">
-                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tab-content" id="advanced-tab">
-                        <div class="form-group">
-                            <label>QR Kod O'lchami</label>
-                            <input type="range" id="qr-size" min="128" max="512" value="256" step="32">
-                            <span id="qr-size-value">256px</span>
-                        </div>
-                        <div class="form-group">
-                            <label>Chegara (Margin)</label>
-                            <input type="range" id="qr-margin" min="0" max="20" value="4">
-                            <span id="qr-margin-value">4</span>
-                        </div>
-                        <div class="form-group">
-                            <label>Xato Bartaraf Etish Darajasi</label>
-                            <select id="error-correction">
-                                <option value="L">L - Past (7%)</option>
-                                <option value="M" selected>M - O'rta (15%)</option>
-                                <option value="Q">Q - Yuqori (25%)</option>
-                                <option value="H">H - Eng Yuqori (30%)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Fon Shaffofligi</label>
-                            <label class="toggle">
-                                <input type="checkbox" id="transparent-bg">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button id="apply-design" class="btn primary">Dizaynni Qo'llash</button>
+                <div class="brand-copy">
+                    <span class="brand-logo-text">QRly</span>
                 </div>
             </div>
 
-            <div class="output-section">
-                <div class="card">
-                    <h2>Natija</h2>
-                    <div class="qr-container" id="qr-container">
-                        <div class="placeholder">
-                            <svg viewBox="0 0 64 64" class="placeholder-icon">
-                                <rect x="8" y="8" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="24" y="8" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="40" y="8" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="8" y="24" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="40" y="24" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="8" y="40" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="24" y="40" width="12" height="12" rx="1" fill="currentColor"/>
-                                <rect x="40" y="40" width="12" height="12" rx="1" fill="currentColor"/>
-                            </svg>
-                            <p>QR kod uchun ma'lumot kiriting</p>
-                        </div>
-                    </div>
-                    <div class="actions" id="actions" style="display: none;">
-                        <button id="download-png" class="btn primary">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="7 10 12 15 17 10"/>
-                                <line x1="12" y1="15" x2="12" y2="3"/>
-                            </svg>
-                            PNG Yuklab Olish
-                        </button>
-                        <button id="download-svg" class="btn secondary">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="7 10 12 15 17 10"/>
-                                <line x1="12" y1="15" x2="12" y2="3"/>
-                            </svg>
-                            SVG Yuklab Olish
-                        </button>
-                        <button id="copy-btn" class="btn secondary">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                            </svg>
-                            Nusxalash
-                        </button>
-                    </div>
-                </div>
+            <div class="nav-control-group">
+                <button id="history-toggle-btn" class="ctrl-btn" title="Saved QR Codes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+                    <span>History</span>
+                    <span id="history-badge" class="count-pill" style="display: none;">0</span>
+                </button>
 
-                <div class="card presets">
-                    <h2>Tayyor Shablonlar</h2>
-                    <div class="preset-grid" id="preset-grid"></div>
-                </div>
+                <button id="theme-btn" class="ctrl-btn icon-only" title="Toggle Theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
             </div>
         </div>
-    </div>
+    </header>
+
+
+    <main class="studio-workspace">
+
+        <section class="hero-block">
+            <div class="hero-pill-badge">
+                <span style="font-family: 'Courier New', Courier, monospace; font-size: 12px; align-self: center;">By Asliddin Asatullayev</span>
+            </div>
+            <h1 style="font-family: 'Times New Roman', Times, serif; font-weight: 300; font-size: 45px;" class="hero-headline">Studio-Precision QR Generator</h1>
+            <p class="hero-description" style="font-family: 'Courier New', Courier, monospace; font-size: 16px; font-weight: 800;">Convert links, Wi-Fi networks, and contact cards into branded, 100% scannable physical prints &amp; digital codes.</p>
+        </section>
+
+        <!-- Studio Grid -->
+        <div class="editor-grid">
+            <!-- Left Column: Controls -->
+            <section class="control-column">
+                <!-- 1. Content Card -->
+                <div class="glass-card">
+                    <div class="card-topbar">
+                        <div class="step-indicator">
+                            <span class="step-number">01</span>
+                            <span class="step-title">Content &amp; Payload</span>
+                        </div>
+                        <div class="tab-pill-group">
+                            <button class="tab-pill active" data-type="url">Link</button>
+                            <button class="tab-pill" data-type="wifi">Wi-Fi</button>
+                            <button class="tab-pill" data-type="vcard">Contact</button>
+                            <button class="tab-pill" data-type="text">Text</button>
+                        </div>
+                    </div>
+
+                    <div class="card-interior">
+                        <!-- URL Input Pane -->
+                        <div class="pane-view active" id="pane-url">
+                            <div class="glass-input-wrapper">
+                                <span class="input-lens-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                </span>
+                                <input type="text" id="url-input" class="primary-text-input" placeholder="https://domain.com or paste link" value="https://github.com/muslimbek/qrly" autocomplete="off" spellcheck="false">
+                                <button id="paste-btn" class="glass-inline-btn" title="Paste from Clipboard">Paste</button>
+                            </div>
+                        </div>
+
+                        <!-- Wi-Fi Pane -->
+                        <div class="pane-view" id="pane-wifi">
+                            <div class="dual-row">
+                                <div class="form-group">
+                                    <label for="wifi-ssid">Network SSID</label>
+                                    <input type="text" id="wifi-ssid" class="sub-text-input" placeholder="e.g. Office_5G" value="Office_5G">
+                                </div>
+                                <div class="form-group">
+                                    <label for="wifi-type">Encryption</label>
+                                    <select id="wifi-type" class="sub-text-input">
+                                        <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+                                        <option value="WEP">WEP</option>
+                                        <option value="nopass">None (Open)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group mt-sm">
+                                <label for="wifi-pass">Network Password</label>
+                                <input type="text" id="wifi-pass" class="sub-text-input" placeholder="Wi-Fi Password">
+                            </div>
+                        </div>
+
+                        <!-- vCard Pane -->
+                        <div class="pane-view" id="pane-vcard">
+                            <div class="dual-row">
+                                <div class="form-group">
+                                    <label for="vcard-fn">Full Name</label>
+                                    <input type="text" id="vcard-fn" class="sub-text-input" placeholder="John Doe" value="Muslimbek">
+                                </div>
+                                <div class="form-group">
+                                    <label for="vcard-tel">Phone</label>
+                                    <input type="tel" id="vcard-tel" class="sub-text-input" placeholder="+1 234 567 8900">
+                                </div>
+                            </div>
+                            <div class="dual-row mt-sm">
+                                <div class="form-group">
+                                    <label for="vcard-em">Email</label>
+                                    <input type="email" id="vcard-em" class="sub-text-input" placeholder="contact@domain.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="vcard-url">Website</label>
+                                    <input type="text" id="vcard-url" class="sub-text-input" placeholder="https://portfolio.me">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text Pane -->
+                        <div class="pane-view" id="pane-text">
+                            <textarea id="text-input" class="primary-textarea" rows="3" placeholder="Enter plain text, notes, instructions, or keys..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Styling & Customization Card -->
+                <div class="glass-card">
+                    <div class="card-topbar">
+                        <div class="step-indicator">
+                            <span class="step-number">02</span>
+                            <span class="step-title">Style &amp; Brand Palette</span>
+                        </div>
+                    </div>
+
+                    <div class="card-interior">
+                        <!-- Color Row -->
+                        <div class="dual-row">
+                            <div class="color-unit">
+                                <label class="field-label">QR Foreground</label>
+                                <div class="color-capsule">
+                                    <input type="color" id="fg-color" value="#090B0E">
+                                    <span id="fg-color-hex" class="mono-hex">#090B0E</span>
+                                </div>
+                            </div>
+
+                            <div class="color-unit">
+                                <label class="field-label">Background</label>
+                                <div class="color-capsule">
+                                    <input type="color" id="bg-color" value="#FFFFFF">
+                                    <span id="bg-color-hex" class="mono-hex">#FFFFFF</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Curated Palette Chips -->
+                        <div class="palette-swatches">
+                            <button class="swatch-chip active" data-fg="#090B0E" data-bg="#FFFFFF" title="Obsidian Mono">
+                                <span class="swatch-dot" style="background: #090B0E; border: 1px solid #444;"></span>
+                                <span>Obsidian</span>
+                            </button>
+                            <button class="swatch-chip" data-fg="#6366F1" data-bg="#FFFFFF" title="Electric Indigo">
+                                <span class="swatch-dot" style="background: #6366F1;"></span>
+                                <span>Indigo</span>
+                            </button>
+                            <button class="swatch-chip" data-fg="#10B981" data-bg="#F0FDF4" title="Emerald Mint">
+                                <span class="swatch-dot" style="background: #10B981;"></span>
+                                <span>Emerald</span>
+                            </button>
+                            <button class="swatch-chip" data-fg="#EF4444" data-bg="#FFFFFF" title="Crimson Red">
+                                <span class="swatch-dot" style="background: #EF4444;"></span>
+                                <span>Crimson</span>
+                            </button>
+                            <button class="swatch-chip" data-fg="#F59E0B" data-bg="#18181B" title="Midnight Gold">
+                                <span class="swatch-dot" style="background: #F59E0B;"></span>
+                                <span>Gold</span>
+                            </button>
+                        </div>
+
+                        <!-- FEATURE 1: CTA Frame & Sticker Badge -->
+                        <div class="feature-block mt-md">
+                            <div class="feature-header-row">
+                                <div class="feature-title-wrap">
+                                    <span class="feature-tag">FEATURE</span>
+                                    <span class="field-label bold">Sticker &amp; CTA Badge Frame</span>
+                                </div>
+                                <label class="switch-control">
+                                    <input type="checkbox" id="frame-enable">
+                                    <span class="switch-track"></span>
+                                </label>
+                            </div>
+
+                            <div id="frame-settings-subpanel" class="frame-subpanel" style="display: none;">
+                                <div class="dual-row">
+                                    <div class="form-group">
+                                        <label for="frame-text-input">Badge Text</label>
+                                        <input type="text" id="frame-text-input" class="sub-text-input" value="SCAN ME" maxlength="24">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="frame-position">Position</label>
+                                        <select id="frame-position" class="sub-text-input">
+                                            <option value="bottom" selected>Bottom Banner</option>
+                                            <option value="top">Top Header</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="quick-cta-pills">
+                                    <button class="cta-pill-btn" data-text="SCAN ME">SCAN ME</button>
+                                    <button class="cta-pill-btn" data-text="CONNECT WI-FI">CONNECT WI-FI</button>
+                                    <button class="cta-pill-btn" data-text="VISIT SITE">VISIT SITE</button>
+                                    <button class="cta-pill-btn" data-text="VIEW MENU">VIEW MENU</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FEATURE 2: Center Logo Overlay with Protected Shield -->
+                        <div class="feature-block mt-md">
+                            <div class="feature-header-row">
+                                <div style="border: none;" class="feature-title-wrap">
+                                    <span style="border: none;" class="feature-tag">LOGO</span>
+                                    <span class="field-label bold">Center Watermark &amp; Icon</span>
+                                </div>
+                                <span class="shield-badge">100% Scannable Shield</span>
+                            </div>
+
+                            <div class="logo-action-bar">
+                                <input type="file" id="logo-file" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden>
+                                <button id="upload-logo-btn" class="glass-btn-sm">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    <span>Upload Image</span>
+                                </button>
+
+                                <div class="preset-icon-strip">
+                                    <a href="https://github.com/asliddinasatullayev-aslaton">
+                                        <button class="icon-preset-btn" data-icon="github" title="GitHub">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                                    </button>
+                                    </a>
+                                   <a href="https://www.instagram.com/the_asatullayev/">
+                                    
+                                    <button class="icon-preset-btn" data-icon="instagram" title="Instagram">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                                    </button>
+                                   </a>
+
+                                </div>
+                            </div>
+
+                            <div id="active-logo-pill" class="logo-active-tag" style="display: none;">
+                                <div class="logo-thumb-wrapper">
+                                    <img id="logo-preview-img" src="" alt="Active Logo">
+                                </div>
+                                <span class="logo-label-text">Logo Embedded</span>
+                                <button id="remove-logo-btn" class="logo-remove-btn" title="Remove Logo">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Live Stage & Export -->
+            <section class="stage-column">
+                <div class="glass-card stage-card-wrap">
+                    <div class="stage-header-row">
+                        <div class="scannable-status">
+                         
+                            <span style="color: #6366F1; font-family: 'Courier New', Courier, monospace;" class="status-title">100% Scannable Certified</span>
+                        </div>
+                        <span id="target-summary" class="payload-chip">https://github.com/muslimbek/qrly</span>
+                    </div>
+
+                    <!-- Canvas Viewport -->
+                    <div class="canvas-viewport-box">
+                        <div id="qr-loading-spinner" class="canvas-loader" style="display: none;">
+                            <div class="radar-spinner"></div>
+                        </div>
+                        <canvas id="main-qr-canvas" width="600" height="600"></canvas>
+                    </div>
+
+                    <!-- Resolution & Export Buttons -->
+                    <div class="export-suite">
+                        <button id="download-png-btn" class="cta-action-btn primary-cta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span>Download PNG (HD)</span>
+                        </button>
+
+                        <button id="download-svg-btn" class="cta-action-btn secondary-cta" title="Vector SVG for Figma / Illustrator">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            <span>Vector SVG</span>
+                        </button>
+
+                        <button id="copy-clipboard-btn" class="cta-action-btn icon-cta" title="Copy QR Image to Clipboard">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Slide-in History Drawer -->
+    <div class="drawer-scrim" id="drawer-overlay"></div>
+    <aside class="history-drawer-panel" id="history-drawer">
+        <div class="drawer-header-bar">
+            <div class="drawer-title-group">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+                <h3>Recent QRs</h3>
+            </div>
+            <button id="close-drawer-btn" class="drawer-close-btn" title="Close">✕</button>
+        </div>
+
+        <div class="drawer-action-strip">
+            <span id="history-total-count" class="item-count-text">0 items</span>
+            <button id="clear-all-history" class="clear-history-action">Clear All</button>
+        </div>
+
+        <div class="drawer-scroll-body" id="history-list-items"></div>
+    </aside>
+
+    <!-- Floating Toast Feedback -->
+    <div id="toast-root" class="toast-hub"></div>
 
     <script src="script.js"></script>
 </body>
